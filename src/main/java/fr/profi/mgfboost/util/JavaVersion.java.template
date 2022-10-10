@@ -1,0 +1,16 @@
+package fr.profi.mgfboost.util;
+
+import fr.profi.util.version.IVersion;
+
+public class JavaVersion implements IVersion {
+
+    public String getModuleName() {
+	return "@moduleName@";
+    }
+
+    public String getVersion() {
+	return "@version@";
+    }
+
+}
+

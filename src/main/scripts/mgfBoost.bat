@@ -1,0 +1,1 @@
+.\jdk\bin\java -Xmx2G -Duser.language=en -Duser.country=US -XX:+UseG1GC -XX:+UseStringDeduplication -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=30 -cp "mgfBoost-${pom.version}.jar;lib/*" fr.profi.mgfboost.ui.MainFrame
