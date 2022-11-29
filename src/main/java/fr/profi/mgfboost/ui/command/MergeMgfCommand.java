@@ -54,6 +54,11 @@ public class MergeMgfCommand implements ICommand {
   }
 
   @Override
+  public void showErrorMessage() {
+    //No message to display yet
+  }
+
+  @Override
   public void setInputCollections(List<MS2Collection> selectedCollections) {
     command.inputFileName1 = selectedCollections.get(0).getFile().getAbsolutePath();
     command.inputFileName2 = selectedCollections.get(1).getFile().getAbsolutePath();

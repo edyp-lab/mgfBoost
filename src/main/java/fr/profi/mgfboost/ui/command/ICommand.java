@@ -16,6 +16,8 @@ public interface ICommand {
 
   boolean buildCommand();
 
+  void showErrorMessage();
+
   void setInputCollections(List<MS2Collection> selectedFiles);
 
   MS2Collection getOutputMS2Collection();

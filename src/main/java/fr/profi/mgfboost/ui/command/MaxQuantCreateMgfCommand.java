@@ -55,6 +55,11 @@ public class MaxQuantCreateMgfCommand implements ICommand {
   }
 
   @Override
+  public void showErrorMessage() {
+    //No message to display yet
+  }
+
+  @Override
   public void setInputCollections(List<MS2Collection> selectedCollections) {
     File[] aplFiles = MS2Collection.MaxQuant.locateAPLFiles(selectedCollections.get(0));
     if (aplFiles.length > 0 && aplFiles[0] != null) command.inputFileName1 = aplFiles[0].getAbsolutePath();

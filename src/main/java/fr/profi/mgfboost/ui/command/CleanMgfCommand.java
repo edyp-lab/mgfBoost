@@ -54,6 +54,11 @@ public class CleanMgfCommand implements ICommand {
   }
 
   @Override
+  public void showErrorMessage() {
+    //No message to display yet
+  }
+
+  @Override
   public void setInputCollections(List<MS2Collection> selectedCollections) {
     command.mgf = selectedCollections.get(0).getFile().getAbsolutePath();
   }

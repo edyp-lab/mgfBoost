@@ -293,6 +293,8 @@ class ConfigurationDialog extends JDialog {
       if (command.buildCommand()) {
         isValidated = true;
         this.setVisible(false);
+      } else {
+        command.showErrorMessage();
       }
     });
     getRootPane().setDefaultButton(okBtn);

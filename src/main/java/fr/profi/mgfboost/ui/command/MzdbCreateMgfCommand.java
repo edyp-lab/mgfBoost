@@ -54,8 +54,12 @@ public class MzdbCreateMgfCommand implements ICommand {
 
   @Override
   public boolean buildCommand() {
-    _getConfigurationPanel().buildCommand(command);
-    return true;
+    return _getConfigurationPanel().buildCommand(command);
+  }
+
+  @Override
+  public void showErrorMessage() {
+     _getConfigurationPanel().showErrorMessage();
   }
 
   @Override
