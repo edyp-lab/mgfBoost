@@ -65,9 +65,9 @@ public class MzdbCreateMgfPanel extends JPanel {
         buildCmdSuccess = false;
       }
     } else {
-      command.outputFile = "GET VALUE !";
-      buildCmdErrorMsg ="No output file specified ! ";
-      buildCmdSuccess=false;
+//      command.outputFile = "GET VALUE !";
+//      buildCmdErrorMsg ="No output file specified ! ";
+//      buildCmdSuccess=false;
     }
     command.msLevel = 2;
     command.precMzComputation = ((String)precComputerCombo.getSelectedItem()).toLowerCase();
@@ -103,6 +103,12 @@ public class MzdbCreateMgfPanel extends JPanel {
     if(!buildCmdSuccess)
       JOptionPane.showMessageDialog(this, buildCmdErrorMsg, "Create Mgf",JOptionPane.ERROR_MESSAGE);
 
+  }
+
+  public void updateComponents(){
+    updatePCleanOption();
+    updateConfigCombo();
+    updateMethodCombo();
   }
 
   private void initValues(CommandArguments.MzDBCreateMgfCommand command) {
@@ -335,7 +341,6 @@ public class MzdbCreateMgfPanel extends JPanel {
     try {
       updateOnGoing = true;
       if (!pCleanCbx.isSelected()) {
-        pCleanMethodCombo.setSelectedIndex(0);
         pCleanMethodLabel.setEnabled(false);
         pCleanConfigLabel.setEnabled(false);
         pCleanMethodCombo.setEnabled(false);
@@ -344,7 +349,11 @@ public class MzdbCreateMgfPanel extends JPanel {
         pCleanMethodLabel.setEnabled(true);
         pCleanConfigLabel.setEnabled(true);
         pCleanConfigCombo.setEnabled(true);
-        pCleanMethodCombo.setEnabled(true);
+        if(!pCleanConfigCombo.getSelectedItem().equals(CommandArguments.PCleanConfig.TMT_LABELED))
+          pCleanMethodCombo.setEnabled(false);
+        else
+          pCleanMethodCombo.setEnabled(true);
+
       }
     }finally {
       updateOnGoing = false;
@@ -364,6 +373,8 @@ public class MzdbCreateMgfPanel extends JPanel {
       public void windowClosing(WindowEvent e){
         if(panel.buildCommand(new CommandArguments.MzDBCreateMgfCommand()))
           System.exit(0);
+        else
+          panel.showErrorMessage();
       }
     });
     java.awt.EventQueue.invokeLater(() -> f.setVisible(true));
