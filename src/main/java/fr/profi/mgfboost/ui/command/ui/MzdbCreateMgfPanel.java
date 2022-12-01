@@ -106,9 +106,9 @@ public class MzdbCreateMgfPanel extends JPanel {
   }
 
   public void updateComponents(){
-    updatePCleanOption();
     updateConfigCombo();
     updateMethodCombo();
+    updatePCleanOption();
   }
 
   private void initValues(CommandArguments.MzDBCreateMgfCommand command) {
