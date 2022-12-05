@@ -19,9 +19,9 @@ public class MzdbCreateMgfCommand implements ICommand {
 
   private final static Logger logger = LoggerFactory.getLogger(CleanMgfCommand.class);
 
-  private CommandArguments.MzDBCreateMgfCommand command;
+  protected CommandArguments.MzDBCreateMgfCommand command;
 
-  private MzdbCreateMgfPanel configurationPanel = null;
+  protected MzdbCreateMgfPanel configurationPanel = null;
 
   public MzdbCreateMgfCommand() {
     command = new CommandArguments.MzDBCreateMgfCommand();

@@ -113,7 +113,7 @@ public class MzdbCreateMgfPanel extends JPanel {
 
   private void initValues(CommandArguments.MzDBCreateMgfCommand command) {
     precComputerCombo.setSelectedItem(command.precMzComputation);
-    mzToleranceTF.setText(Float.toString(10.0f)); // mzToleranceTF.setText(Float.toString(command.mzTolPPM));
+    mzToleranceTF.setText(Float.toString(command.mzTolPPM));
     intensityCutoffTF.setText(Float.toString(command.intensityCutoff));
     prolineTitleCbx.setSelected(command.exportProlineTitle);
     pCleanCbx.setSelected(command.pClean);
