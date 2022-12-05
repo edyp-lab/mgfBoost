@@ -64,10 +64,6 @@ public class MzdbCreateMgfPanel extends JPanel {
         buildCmdErrorMsg = "No output file specified ! ";
         buildCmdSuccess = false;
       }
-    } else {
-//      command.outputFile = "GET VALUE !";
-//      buildCmdErrorMsg ="No output file specified ! ";
-//      buildCmdSuccess=false;
     }
     command.msLevel = 2;
     command.precMzComputation = ((String)precComputerCombo.getSelectedItem()).toLowerCase();
