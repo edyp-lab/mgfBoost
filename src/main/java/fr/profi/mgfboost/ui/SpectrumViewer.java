@@ -10,6 +10,7 @@ import fr.proline.studio.utils.CyclicColorPalette;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.Map;
 
 public class SpectrumViewer extends JPanel implements IRawFileViewer {
@@ -25,6 +26,11 @@ public class SpectrumViewer extends JPanel implements IRawFileViewer {
 
   private void initComponents() {
     spectrumPanel = new AbstractSpectrumPanel(this) {
+
+      @Override
+      public void propertyChange(PropertyChangeEvent evt) {
+
+      }
 
       @Override
       public void plotPanelMouseClicked(MouseEvent e, double xValue, double yValue) {
@@ -49,7 +55,7 @@ public class SpectrumViewer extends JPanel implements IRawFileViewer {
   }
 
   @Override
-  public void extractAndDisplayChromatogram(MsnExtractionRequest msnExtractionRequest, Display display, MzScopeCallback mzScopeCallback) {
+  public void extractAndDisplay(ExtractionRequest extractionRequest, Display display, MzScopeCallback mzScopeCallback) {
 
   }
 

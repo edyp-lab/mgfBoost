@@ -71,11 +71,11 @@ public class MzdbCreateMgfPanel extends JPanel {
       command.mzTolPPM = Float.parseFloat(mzToleranceTF.getText());
       command.intensityCutoff = Float.parseFloat(intensityCutoffTF.getText());
     } catch (NumberFormatException nfe){
+    }
       if(!buildCmdSuccess)
         buildCmdErrorMsg += "\n";
-      buildCmdErrorMsg+="Error reading mz Tolerence and/or intensity cutoff";
+      buildCmdErrorMsg+="Error reading mz Tolerance and/or intensity cutoff";
       buildCmdSuccess = false;
-    }
     command.exportProlineTitle = prolineTitleCbx.isSelected();
 
     String pCleanMethodName = (String) pCleanMethodCombo.getSelectedItem();
