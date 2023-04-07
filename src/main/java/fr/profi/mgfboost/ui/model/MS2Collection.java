@@ -88,8 +88,6 @@ public class MS2Collection {
         }
         reader.close();
         return spectrumList;
-      } catch (ClassNotFoundException e) {
-        throw new RuntimeException(e);
       } catch (FileNotFoundException e) {
         throw new RuntimeException(e);
       } catch (SQLiteException e) {
