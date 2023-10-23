@@ -114,4 +114,9 @@ public class SpectrumViewer extends JPanel implements IRawFileViewer {
   public Spectrum getCurrentSpectrum() {
     return spectrum;
   }
+
+  @Override
+  public void changeForceFittedToCentroid() {
+
+  }
 }
