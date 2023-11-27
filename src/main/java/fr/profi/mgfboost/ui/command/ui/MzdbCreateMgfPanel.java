@@ -127,7 +127,7 @@ public class MzdbCreateMgfPanel extends JPanel {
 
     JPanel precursorPanel = new JPanel();
     JLabel precComputerLabel = new JLabel();
-    String[] precComputerValues = {"main_precursor_mz","mgf_boost_v3.6"};
+    String[] precComputerValues = {"main_precursor_mz","mgf_boost"};
     precComputerCombo = new JComboBox<>(precComputerValues);
     JLabel mzToleranceLabel = new JLabel();
     mzToleranceTF = new JTextField();
