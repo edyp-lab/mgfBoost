@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.List;
 import java.util.Map;
 
 public class SpectrumViewer extends JPanel implements IRawFileViewer {
@@ -51,6 +52,11 @@ public class SpectrumViewer extends JPanel implements IRawFileViewer {
 
   @Override
   public IRawFile getCurrentRawfile() {
+    return null;
+  }
+
+  @Override
+  public List<IRawFile> getAllRawfiles() {
     return null;
   }
 
