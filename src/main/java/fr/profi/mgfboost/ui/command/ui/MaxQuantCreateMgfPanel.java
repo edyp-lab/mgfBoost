@@ -13,9 +13,8 @@ import java.awt.*;
 /**
  * @author unknown
  */
-public class MaxQuantCreateMgfPanel extends JPanel {
+public class MaxQuantCreateMgfPanel extends AbstractCommandPanel<CommandArguments.MaxQuantMGFCommand> {
 
-  private JTextField outputTF;
   private JTextField inputFile1TF;
   private JTextField inputFile2TF;
 
@@ -25,32 +24,33 @@ public class MaxQuantCreateMgfPanel extends JPanel {
 
   public MaxQuantCreateMgfPanel(CommandArguments.MaxQuantMGFCommand command) {
     this();
-    initValues(command);
+    updatePanelFromCommand(command);
   }
 
-  private void initValues(CommandArguments.MaxQuantMGFCommand command) {
-    inputFile1TF.setText(command.inputFileName1.trim());
-    inputFile2TF.setText(command.inputFileName2.trim());
+  public AbstractCommandPanel<CommandArguments.MaxQuantMGFCommand> updatePanelFromCommand(CommandArguments.MaxQuantMGFCommand command) {
+    return this;
   }
 
-  public void buildCommand(CommandArguments.MaxQuantMGFCommand command) {
-    command.outputFileName = outputTF.getText().trim();
+  public boolean buildCommand(CommandArguments.MaxQuantMGFCommand command) {
+    command.outputFileName = outputFilePanel.getOutputFilepath();
     command.inputFileName1 = inputFile1TF.getText().trim();
     command.inputFileName2 = inputFile2TF.getText().trim();
+
+    return true;
   }
 
   private void initComponents() {
-    JPanel panel1 = new JPanel();
-    JLabel label1 = new JLabel();
-    outputTF = new JTextField();
-    JButton button1 = new JButton();
-    JPanel panel2 = new JPanel();
-    JLabel label2 = new JLabel();
+
+    JPanel mqFilesPanel = new JPanel();
     inputFile1TF = new JTextField(20);
-    JButton button2 = new JButton();
-    JLabel label3 = new JLabel();
+    JButton fileChooser1 = new JButton();
+    // not yet implemented
+    fileChooser1.setEnabled(false);
     inputFile2TF = new JTextField(20);
-    JButton button3 = new JButton();
+    JButton fileChooser2 = new JButton();
+    // not yet implemented
+    fileChooser2.setEnabled(false);
+
 
     //======== this ========
     setLayout(new GridBagLayout());
@@ -59,74 +59,55 @@ public class MaxQuantCreateMgfPanel extends JPanel {
     GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE, defaultInsets, 0, 0);
 
-    //======== panel1 ========
-      panel1.setLayout(new GridBagLayout());
-
-      //---- label1 ----
-      label1.setText("output File:");
-      panel1.add(label1, c);
-      c.gridx++;
-      c.weightx = 1.0;
-      c.fill = GridBagConstraints.BOTH;
-
-      panel1.add(outputTF, c);
-
-      //---- button1 ----
-      c.gridx++;
-      c.weightx = 0.0;
-      c.fill = GridBagConstraints.NONE;
-      button1.setText("choose");
-      button1.addActionListener(e -> FileChooserUtil.saveAsChooser(outputTF));
-
-    panel1.add(button1, c);
-
-    add(panel1, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
+    //======== output file panel ========
+    outputFilePanel = new OutputFilePanel();
+    add(outputFilePanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
       GridBagConstraints.CENTER, GridBagConstraints.BOTH,
       new Insets(5, 0, 5, 0), 0, 0));
 
-    //======== panel2 =======
-      panel2.setBorder(new TitledBorder("MaxQuant .apl files"));
-      panel2.setLayout(new GridBagLayout());
+    //======== mqFilesPanel =======
+      mqFilesPanel.setBorder(new TitledBorder("MaxQuant .apl files"));
+      mqFilesPanel.setLayout(new GridBagLayout());
 
       //---- label2 ----
-      label2.setText("Multi apl file (.sil0.apl):");
+      JLabel label2 = new JLabel("Multi apl file (.sil0.apl):");
       c.gridx = 0;
       c.gridy = 0;
-      panel2.add(label2, c);
+      mqFilesPanel.add(label2, c);
 
       c.gridx++;
       c.weightx = 1.0;
       c.fill = GridBagConstraints.BOTH;
-      panel2.add(inputFile1TF, c);
+      mqFilesPanel.add(inputFile1TF, c);
 
-      //---- button2 ----
-      button2.setText("choose");
+      //---- fileChooser1 ----
+      fileChooser1.setText("Choose");
       c.gridx++;
       c.weightx = 0.0;
       c.fill = GridBagConstraints.NONE;
-      panel2.add(button2, c);
+      mqFilesPanel.add(fileChooser1, c);
 
       //---- label3 ----
       c.gridx = 0;
       c.gridy++;
       c.weightx = 0.0;
       c.fill = GridBagConstraints.NONE;
-      label3.setText("Peak apl file (.peak.apl):");
-      panel2.add(label3, c);
+      JLabel label3 = new JLabel("Peak apl file (.peak.apl):");
+      mqFilesPanel.add(label3, c);
 
       c.gridx++;
       c.weightx = 1.0;
       c.fill = GridBagConstraints.BOTH;
-      panel2.add(inputFile2TF, c);
+      mqFilesPanel.add(inputFile2TF, c);
 
-      //---- button3 ----
-      button3.setText("choose");
+      //---- fileChooser2 ----
+      fileChooser2.setText("Choose");
       c.gridx++;
       c.weightx = 0.0;
       c.fill = GridBagConstraints.NONE;
-      panel2.add(button3, c);
+      mqFilesPanel.add(fileChooser2, c);
 
-    add(panel2, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
+    add(mqFilesPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
       GridBagConstraints.CENTER, GridBagConstraints.BOTH,
       new Insets(0, 5, 0, 5), 0, 0));
   }
@@ -139,4 +120,5 @@ public class MaxQuantCreateMgfPanel extends JPanel {
     f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     java.awt.EventQueue.invokeLater(() -> f.setVisible(true));
   }
+
 }

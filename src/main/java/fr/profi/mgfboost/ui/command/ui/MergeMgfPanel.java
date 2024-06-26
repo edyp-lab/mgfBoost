@@ -13,52 +13,47 @@ import java.awt.*;
 /**
  * @author unknown
  */
-public class MergeMgfPanel extends JPanel {
+public class MergeMgfPanel extends AbstractCommandPanel<CommandArguments.MgfMergerCommand> {
 
-  private JTextField outputTF;
   private JTextField precursorsFileTF;
   private JTextField fragmentsFileTF;
   private JCheckBox replaceCbx;
   private JCheckBox filterCbx;
 
-  public MergeMgfPanel(CommandArguments.MgfMergerCommand command) {
-    this();
-    initValues(command);
-  }
-
-  private void initValues(CommandArguments.MgfMergerCommand command) {
-    replaceCbx.setSelected(command.replace);
-    filterCbx.setSelected(command.filter);
-    precursorsFileTF.setText(command.inputFileName1.trim());
-    fragmentsFileTF.setText(command.inputFileName2.trim());
-  }
-
-
-  public void buildCommand(CommandArguments.MgfMergerCommand command) {
-    command.inputFileName1 = precursorsFileTF.getText().trim();
-    command.inputFileName2 = fragmentsFileTF.getText().trim();
-    command.filter = filterCbx.isSelected();
-    command.replace = replaceCbx.isSelected();
-    command.outputFileName = outputTF.getText().trim();
-  }
-
   public MergeMgfPanel() {
     initComponents();
   }
 
+  public AbstractCommandPanel<CommandArguments.MgfMergerCommand> updatePanelFromCommand(CommandArguments.MgfMergerCommand command) {
+    replaceCbx.setSelected(command.replace);
+    filterCbx.setSelected(command.filter);
+    precursorsFileTF.setText(command.inputFileName1.trim());
+    fragmentsFileTF.setText(command.inputFileName2.trim());
+    return this;
+  }
+
+
+  public boolean buildCommand(CommandArguments.MgfMergerCommand command) {
+    command.inputFileName1 = precursorsFileTF.getText().trim();
+    command.inputFileName2 = fragmentsFileTF.getText().trim();
+    command.filter = filterCbx.isSelected();
+    command.replace = replaceCbx.isSelected();
+    command.outputFileName = outputFilePanel.getOutputFilepath();
+
+    return true;
+  }
+
   private void initComponents() {
-    JPanel panel1 = new JPanel();
-    JLabel label1 = new JLabel();
-    outputTF = new JTextField();
-    JButton button1 = new JButton();
-    JPanel panel2 = new JPanel();
-    JLabel label2 = new JLabel();
+    JPanel inputFilesPanel = new JPanel();
     precursorsFileTF = new JTextField();
-    JButton button2 = new JButton();
-    JLabel label3 = new JLabel();
+    JButton fileChooser1 = new JButton();
+    // not yet implemented
+    fileChooser1.setEnabled(false);
     fragmentsFileTF = new JTextField();
-    JButton button3 = new JButton();
-    JPanel panel3 = new JPanel();
+    JButton fileChooser2 = new JButton();
+    // not yet implemented
+    fileChooser2.setEnabled(false);
+    JPanel optionsPanel = new JPanel();
     replaceCbx = new JCheckBox();
     filterCbx = new JCheckBox();
 
@@ -71,76 +66,59 @@ public class MergeMgfPanel extends JPanel {
     GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
             GridBagConstraints.CENTER, GridBagConstraints.NONE, fullInsets, 0, 0);
 
-
-      panel1.setLayout(new GridBagLayout());
-      //---- label1 ----
-      label1.setText("output File:");
-      panel1.add(label1, c);
-      //---- outputTF ----
-      c.gridx++;
-      c.weightx = 1.0;
-      c.fill = GridBagConstraints.BOTH;
-      panel1.add(outputTF, c);
-      //---- button1 ----
-      c.gridx++;
-      c.weightx = 0.0;
-      c.fill = GridBagConstraints.NONE;
-      button1.setText("choose");
-      button1.addActionListener(e -> FileChooserUtil.saveAsChooser(outputTF));
-      panel1.add(button1, c);
-
-     add(panel1, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
+     outputFilePanel = new OutputFilePanel();
+     add(outputFilePanel, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
       GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
       new Insets(5, 0, 5, 0), 0, 0));
 
-    //======== panel2 ========
+    //======== inputFilesPanel ========
 
-      panel2.setBorder(new TitledBorder("input files"));
-      panel2.setLayout(new GridBagLayout());
+      inputFilesPanel.setBorder(new TitledBorder("input files"));
+      inputFilesPanel.setLayout(new GridBagLayout());
 
       //---- label2 ----
       c.gridx = 0;
-      label2.setText("precursors MGF file:");
-      panel2.add(label2, c);
+      JLabel label2 = new JLabel("precursors MGF file:");
+      inputFilesPanel.add(label2, c);
 
       c.gridx++;
       c.fill = GridBagConstraints.BOTH;
       c.weightx = 1.0;
-      panel2.add(precursorsFileTF, c);
+      inputFilesPanel.add(precursorsFileTF, c);
 
-      //---- button2 ----
-      button2.setText("choose");
+      //---- fileChooser1 ----
+      fileChooser1.setText("Choose");
       c.gridx++;
       c.weightx = 0.0;
       c.fill = GridBagConstraints.NONE;
-      panel2.add(button2, c);
+      inputFilesPanel.add(fileChooser1, c);
 
       //---- label3 ----
       c.gridx = 0;
       c.gridy++;
-      label3.setText("fragments MGF file:");
-      panel2.add(label3, c);
+      JLabel label3 = new JLabel("fragments MGF file:");
+      inputFilesPanel.add(label3, c);
 
       c.gridx++;
       c.weightx = 1.0;
       c.fill = GridBagConstraints.BOTH;
-      panel2.add(fragmentsFileTF, c);
+      inputFilesPanel.add(fragmentsFileTF, c);
 
-      //---- button3 ----
+      //---- fileChooser2 ----
       c.gridx++;
       c.weightx = 0.0;
       c.fill = GridBagConstraints.NONE;
-      button3.setText("choose");
-      panel2.add(button3, c);
+      fileChooser2.setText("Choose");
+      inputFilesPanel.add(fileChooser2, c);
 
-    add(panel2, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
+    add(inputFilesPanel, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
       GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
       new Insets(5, 5, 5, 5), 0, 0));
 
-    //======== panel3 ========
+    //======== optionsPanel ========
 
-      panel3.setBorder(new TitledBorder("options"));
-      panel3.setLayout(new GridBagLayout());
+      optionsPanel.setBorder(new TitledBorder("options"));
+      optionsPanel.setLayout(new GridBagLayout());
 
       //---- replaceCbx ----
       c.gridx = 0;
@@ -148,14 +126,14 @@ public class MergeMgfPanel extends JPanel {
       c.weightx = 1.0;
       c.fill = GridBagConstraints.BOTH;
       replaceCbx.setText("replace MS/MS fragments of precursor MGF file");
-      panel3.add(replaceCbx, c);
+      optionsPanel.add(replaceCbx, c);
 
       c.gridy++;
       //---- filterCbx ----
       filterCbx.setText("filter peaklist from precursors MGF file if not found in fragments file");
-      panel3.add(filterCbx, c);
+      optionsPanel.add(filterCbx, c);
 
-    add(panel3, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0,
+    add(optionsPanel, new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0,
       GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL,
       new Insets(5, 5, 5, 5), 0, 0));
   }

@@ -5,6 +5,8 @@
 package fr.profi.mgfboost.ui.command.ui;
 
 import fr.profi.mzknife.CommandArguments;
+import fr.profi.mzknife.mzdb.MgfBoostConfigTemplate;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,28 +15,32 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author CB205360
  */
-public class MzdbCreateMgfPanel extends JPanel {
+public class MzdbCreateMgfPanel extends AbstractCommandPanel<CommandArguments.MzDBCreateMgfCommand> {
 
-  private JTextField outputTF;
   private JComboBox<String> precComputerCombo;
   private JTextField mzToleranceTF;
   private JTextField intensityCutoffTF;
   private JCheckBox prolineTitleCbx;
-  private JCheckBox pCleanCbx;
-  private JLabel pCleanMethodLabel;
-  private JLabel pCleanConfigLabel;
-  private JComboBox<String> pCleanMethodCombo;
-  private JComboBox<String> pCleanConfigCombo;
+  private JComboBox<String> cleanMethodCombo;
+  private JLabel cleanLabelingMethodLabel;
+  private JLabel cleanConfigLabel;
+  private JComboBox<String> cleanLabelingMethodCombo;
+  private JComboBox<String> cleanConfigCombo;
 
   private final boolean showOutputTF;
   private final static Logger LOG = LoggerFactory.getLogger(MzdbCreateMgfPanel.class);
 
+  private MgfBoostConfigTemplate mgfBoostConfigTemplate = null;
   private String buildCmdErrorMsg;
   private boolean buildCmdSuccess = true;
+  private boolean updateOnGoing = false;
 
   public MzdbCreateMgfPanel() {
     this(true);
@@ -45,28 +51,49 @@ public class MzdbCreateMgfPanel extends JPanel {
     initComponents();
   }
 
-  public MzdbCreateMgfPanel(CommandArguments.MzDBCreateMgfCommand command) {
-    this();
-    initValues(command);
-  }
-
   public MzdbCreateMgfPanel(CommandArguments.MzDBCreateMgfCommand command, boolean showOutputTF) {
     this(showOutputTF);
-    initValues(command);
+    updatePanelFromCommand(command);
+  }
+
+  public void setMgfBoostConfigTemplate(MgfBoostConfigTemplate mgfBoostConfigTemplate) {
+    this.mgfBoostConfigTemplate = mgfBoostConfigTemplate;
+    if (mgfBoostConfigTemplate != null) {
+      String configName = "mgf_boost - " + mgfBoostConfigTemplate.toString();
+      precComputerCombo.setSelectedItem(configName);
+    } else {
+      precComputerCombo.setSelectedItem("main_precursor_mz");
+    }
+  }
+
+  public MgfBoostConfigTemplate getMgfBoostConfigTemplate() {
+    return mgfBoostConfigTemplate;
   }
 
   public boolean buildCommand(CommandArguments.MzDBCreateMgfCommand command) {
     buildCmdSuccess = true;
     buildCmdErrorMsg = "";
     if(showOutputTF) {
-      command.outputFile = outputTF.getText().trim();
-      if (command.outputFile.isEmpty()) {
-        buildCmdErrorMsg = "No output file specified ! ";
-        buildCmdSuccess = false;
-      }
+      command.outputFile = outputFilePanel.getOutputFilepath();
     }
     command.msLevel = 2;
-    command.precMzComputation = ((String)precComputerCombo.getSelectedItem()).toLowerCase();
+    String[] precComputationParams = ((String) precComputerCombo.getSelectedItem()).split("-");
+    command.precMzComputation = precComputationParams[0].trim().toLowerCase();
+    if (command.precMzComputation.equalsIgnoreCase("mgf_boost")) {
+      try {
+        command.useHeader = mgfBoostConfigTemplate.isUseHeader();
+        command.useSelectionWindow = mgfBoostConfigTemplate.isUseSelectionWindow();
+        command.swMaxPrecursorsCount = mgfBoostConfigTemplate.getSwMaxPrecursorsCount();
+        command.swIntensityThreshold = mgfBoostConfigTemplate.getSwIntensityThreshold();
+        command.pifThreshold = mgfBoostConfigTemplate.getPifThreshold();
+        command.rankThreshold = mgfBoostConfigTemplate.getRankThreshold();
+        command.scanSelectorMode = CommandArguments.ScanSelectorMode.valueOf(mgfBoostConfigTemplate.getScanSelector().toString());
+      } catch (IllegalArgumentException iae) {
+        buildCmdSuccess = false;
+        buildCmdErrorMsg += "\n";
+        buildCmdErrorMsg+="MGF boost config template should be specified ";
+      }
+    }
     try {
       command.mzTolPPM = Float.parseFloat(mzToleranceTF.getText());
       command.intensityCutoff = Float.parseFloat(intensityCutoffTF.getText());
@@ -78,15 +105,15 @@ public class MzdbCreateMgfPanel extends JPanel {
     }
     command.exportProlineTitle = prolineTitleCbx.isSelected();
 
-    String pCleanMethodName = (String) pCleanMethodCombo.getSelectedItem();
-    command.pClean = pCleanCbx.isSelected();
-    if(command.pClean) {
-      command.pCleanConfig = (CommandArguments.PCleanConfig) pCleanConfigCombo.getSelectedItem();
-      command.pCleanLabelMethodName = (pCleanMethodName.equalsIgnoreCase("none")) ? "" : pCleanMethodName.toUpperCase();
-      if(command.pCleanConfig.equals(CommandArguments.PCleanConfig.TMT_LABELED) && command.pCleanLabelMethodName.isEmpty()){
+    String pCleanMethodName = (String) cleanLabelingMethodCombo.getSelectedItem();
+    command.cleanMethod = (String) cleanMethodCombo.getSelectedItem();
+    if(!command.cleanMethod.equalsIgnoreCase("None")) {
+      command.cleanConfig = (CommandArguments.CleanConfig) cleanConfigCombo.getSelectedItem();
+      command.cleanLabelMethodName = (pCleanMethodName.equalsIgnoreCase("none")) ? "" : pCleanMethodName.toUpperCase();
+      if(command.cleanConfig.equals(CommandArguments.CleanConfig.TMT_LABELED) && command.cleanLabelMethodName.isEmpty()){
         if(!buildCmdSuccess)
           buildCmdErrorMsg += "\n";
-        buildCmdErrorMsg+="pClean labelling method should be specified for "+CommandArguments.PCleanConfig.TMT_LABELED.getDisplayValue();
+        buildCmdErrorMsg+="clean labeling method should be specified for "+ CommandArguments.CleanConfig.TMT_LABELED.getDisplayValue();
         buildCmdSuccess = false;
       }
     }
@@ -95,40 +122,40 @@ public class MzdbCreateMgfPanel extends JPanel {
     return buildCmdSuccess;
   }
 
+  @Override
   public void showErrorMessage(){
     if(!buildCmdSuccess)
       JOptionPane.showMessageDialog(this, buildCmdErrorMsg, "Create Mgf",JOptionPane.ERROR_MESSAGE);
-
   }
 
   public void updateComponents(){
-    updateConfigCombo();
-    updateMethodCombo();
-    updatePCleanOption();
+    cleanConfigUpdated();
+    cleanLabelingMethodUpdated();
+    cleanMethodUpdated();
   }
 
-  private void initValues(CommandArguments.MzDBCreateMgfCommand command) {
+  public AbstractCommandPanel<CommandArguments.MzDBCreateMgfCommand> updatePanelFromCommand(CommandArguments.MzDBCreateMgfCommand command) {
     precComputerCombo.setSelectedItem(command.precMzComputation);
     mzToleranceTF.setText(Float.toString(command.mzTolPPM));
     intensityCutoffTF.setText(Float.toString(command.intensityCutoff));
     prolineTitleCbx.setSelected(command.exportProlineTitle);
-    pCleanCbx.setSelected(command.pClean);
-    pCleanMethodCombo.setSelectedItem((command.pCleanLabelMethodName.isEmpty()) ? "None" : command.pCleanLabelMethodName);
+    cleanMethodCombo.setSelectedItem(command.cleanMethod);
+    cleanLabelingMethodCombo.setSelectedItem((command.cleanLabelMethodName.isEmpty()) ? "None" : command.cleanLabelMethodName);
+    return this;
   }
 
   private void initComponents() {
-    JLabel outputLabel = null;
-    JButton outputBtn = null;
-    if(showOutputTF) {
-      outputLabel = new JLabel();
-      outputTF = new JTextField();
-      outputBtn = new JButton();
-    }
 
     JPanel precursorPanel = new JPanel();
     JLabel precComputerLabel = new JLabel();
-    String[] precComputerValues = {"main_precursor_mz","mgf_boost"};
+
+    List<String> strings = Arrays.stream(MgfBoostConfigTemplate.values()).map(v -> "mgf_boost - "+ v.toString()).collect(Collectors.toList());
+    strings.add(0, "main_precursor_mz");
+
+    String[] precComputerValues = strings.toArray(new String[0]);
+
     precComputerCombo = new JComboBox<>(precComputerValues);
+    precComputerCombo.addActionListener(e -> precComputerConfigUpdated());
     JLabel mzToleranceLabel = new JLabel();
     mzToleranceTF = new JTextField();
     JPanel optionsPanel = new JPanel();
@@ -137,25 +164,25 @@ public class MzdbCreateMgfPanel extends JPanel {
     prolineTitleCbx = new JCheckBox();
     JPanel fragmentsPanel = new JPanel();
 
-    pCleanCbx = new JCheckBox();
-    pCleanMethodLabel = new JLabel();
+    String[] cleanMethodValues = {"None", "eClean", "pClean"};
+    cleanMethodCombo = new JComboBox(cleanMethodValues);
+    cleanMethodCombo.setSelectedIndex(0);
+    cleanMethodCombo.addActionListener(e -> cleanMethodUpdated());
+
+    cleanLabelingMethodLabel = new JLabel();
     String[] labelMethodValues = {"None", "ITRAQ4PLEX", "ITRAQ8PLEX", "TMT6PLEX", "TMT10PLEX", "TMT11PLEX", "TMT16PLEX", "TMT18PLEX"};
-    pCleanMethodCombo = new JComboBox(labelMethodValues);
-    pCleanMethodCombo.setSelectedIndex(0);
-    pCleanMethodCombo.addActionListener(e ->  updateMethodCombo() );
+    cleanLabelingMethodCombo = new JComboBox(labelMethodValues);
+    cleanLabelingMethodCombo.setSelectedIndex(0);
+    cleanLabelingMethodCombo.addActionListener(e ->  cleanLabelingMethodUpdated() );
 
-    pCleanConfigLabel = new JLabel();
-//    List<String> cfgMethodVals = Arrays.stream(CommandArguments.PCleanConfig.values()).map(pclean ->  pclean.getDisplayValue() ).collect(Collectors.toList());
-    CommandArguments.PCleanConfig[] configValues =  CommandArguments.PCleanConfig.values();
-//    String[] configMethodValues = cfgMethodVals.toArray(new String[0]);
-    pCleanConfigCombo = new JComboBox(configValues);
-    pCleanConfigCombo.addActionListener(e ->  updateConfigCombo() );
-    pCleanConfigCombo.setSelectedItem(CommandArguments.PCleanConfig.LABEL_FREE);
-    pCleanCbx.addActionListener(e -> updatePCleanOption());
-    pCleanCbx.setSelected(false);
-    updatePCleanOption();
+    cleanConfigLabel = new JLabel();
+    CommandArguments.CleanConfig[] configValues =  CommandArguments.CleanConfig.values();
+    cleanConfigCombo = new JComboBox(configValues);
+    cleanConfigCombo.addActionListener(e ->  cleanConfigUpdated() );
+    cleanConfigCombo.setSelectedItem(CommandArguments.CleanConfig.LABEL_FREE);
 
-    //======== this ========
+    cleanMethodUpdated();
+
     setLayout(new GridBagLayout());
     final Insets defaultInsets = new Insets(5, 5, 5, 5);
 
@@ -163,34 +190,16 @@ public class MzdbCreateMgfPanel extends JPanel {
             GridBagConstraints.CENTER, GridBagConstraints.NONE, defaultInsets, 0, 0);
 
     GridBagConstraints globalPanelGBC  = new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0,
-            GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(5, 0, 5, 0), 0, 0);
+            GridBagConstraints.CENTER, GridBagConstraints.BOTH,new Insets(5, 5, 5, 5), 0, 0);
+
     globalPanelGBC.gridx =0;
     globalPanelGBC.gridy =0;
 
-    //======== panel1 : output  ========
-    //---- outputLabel ----
+    //======== output file panel  ========
+
     if(showOutputTF) {
-      JPanel panel1 = new JPanel();
-      panel1.setLayout(new GridBagLayout());
-      outputLabel.setText("output File:");
-      panel1.add(outputLabel, insidePanelGBC);
-
-      insidePanelGBC.gridx++;
-      insidePanelGBC.weightx = 1.0;
-      insidePanelGBC.fill = GridBagConstraints.BOTH;
-      panel1.add(outputTF, insidePanelGBC);
-
-
-      //---- outputBtn ----
-      insidePanelGBC.gridx++;
-      insidePanelGBC.weightx = 0.0;
-      insidePanelGBC.fill = GridBagConstraints.NONE;
-
-      outputBtn.setText("choose");
-      outputBtn.addActionListener(e -> FileChooserUtil.saveAsChooser(outputTF));
-      panel1.add(outputBtn, insidePanelGBC);
-
-      add(panel1,globalPanelGBC);
+      outputFilePanel = new OutputFilePanel();
+      add(outputFilePanel,globalPanelGBC);
       globalPanelGBC.gridy++;
     }
 
@@ -222,7 +231,6 @@ public class MzdbCreateMgfPanel extends JPanel {
     insidePanelGBC.fill = GridBagConstraints.BOTH;
     precursorPanel.add(mzToleranceTF, insidePanelGBC);
 
-    globalPanelGBC.insets = new Insets(0, 5, 0,5);
     add(precursorPanel, globalPanelGBC);
     globalPanelGBC.gridy++;
 
@@ -251,7 +259,6 @@ public class MzdbCreateMgfPanel extends JPanel {
     prolineTitleCbx.setText("format spectrum title for Proline");
     optionsPanel.add(prolineTitleCbx, insidePanelGBC);
 
-    globalPanelGBC.insets= new Insets(5, 0, 5, 0);
     add(optionsPanel, globalPanelGBC);
     globalPanelGBC.gridy++;
 
@@ -263,92 +270,105 @@ public class MzdbCreateMgfPanel extends JPanel {
     insidePanelGBC.gridx = 0;
     insidePanelGBC.gridy = 0;
     insidePanelGBC.weightx = 1.0;
-    insidePanelGBC.fill = GridBagConstraints.BOTH;
-    insidePanelGBC.gridwidth = 2;
+    insidePanelGBC.fill = GridBagConstraints.NONE;
+    insidePanelGBC.gridwidth = 1;
     //---- pCleanCbx ----
-    pCleanCbx.setText("apply pClean process");
-    fragmentsPanel.add(pCleanCbx, insidePanelGBC);
+    JLabel cleanMethodLabel = new JLabel();
+    cleanMethodLabel.setText("clean Method:");
+    fragmentsPanel.add(cleanMethodLabel,insidePanelGBC);
+
+    insidePanelGBC.gridx++;
+    insidePanelGBC.weightx = 1.0;
+    insidePanelGBC.fill = GridBagConstraints.BOTH;
+    fragmentsPanel.add(cleanMethodCombo, insidePanelGBC);
 
     //---- pCleanConfigLabel ----
+    insidePanelGBC.gridx = 0;
     insidePanelGBC.gridy++;
     insidePanelGBC.weightx = 0.0;
     insidePanelGBC.gridwidth = 1;
     insidePanelGBC.fill = GridBagConstraints.NONE;
-    pCleanConfigLabel.setText("pClean Configuration:");
-    fragmentsPanel.add(pCleanConfigLabel,insidePanelGBC);
+    cleanConfigLabel.setText("clean Configuration:");
+    fragmentsPanel.add(cleanConfigLabel,insidePanelGBC);
     insidePanelGBC.gridx++;
     insidePanelGBC.weightx = 1.0;
     insidePanelGBC.fill = GridBagConstraints.BOTH;
-    fragmentsPanel.add(pCleanConfigCombo, insidePanelGBC);
+    fragmentsPanel.add(cleanConfigCombo, insidePanelGBC);
 
       //---- pCleanMethodLabel ----
-    insidePanelGBC.gridy++;
     insidePanelGBC.gridx = 0;
+    insidePanelGBC.gridy++;
     insidePanelGBC.weightx = 0.0;
     insidePanelGBC.gridwidth = 1;
     insidePanelGBC.fill = GridBagConstraints.NONE;
-    pCleanMethodLabel.setText("labeling method:");
-    fragmentsPanel.add(pCleanMethodLabel,insidePanelGBC);
+    cleanLabelingMethodLabel.setText("labeling method:");
+    fragmentsPanel.add(cleanLabelingMethodLabel,insidePanelGBC);
     insidePanelGBC.gridx++;
     insidePanelGBC.weightx = 1.0;
     insidePanelGBC.fill = GridBagConstraints.BOTH;
-    fragmentsPanel.add(pCleanMethodCombo, insidePanelGBC);
+    fragmentsPanel.add(cleanLabelingMethodCombo, insidePanelGBC);
 
-    globalPanelGBC.insets= new Insets(0, 5, 0,5);
     add(fragmentsPanel, globalPanelGBC);
   }
 
-  private boolean updateOnGoing = false;
-  private void updateMethodCombo(){
+  private void precComputerConfigUpdated() {
+    String[] precComputationParams = ((String) precComputerCombo.getSelectedItem()).split("-");
+    if (precComputationParams[0].trim().toLowerCase().equalsIgnoreCase("mgf_boost")) {
+      mgfBoostConfigTemplate = MgfBoostConfigTemplate.valueOf(precComputationParams[1].trim().toUpperCase());
+    } else {
+      mgfBoostConfigTemplate = null;
+    }
+  }
+
+  private void cleanLabelingMethodUpdated(){
     if(updateOnGoing)
       return;
     try {
       updateOnGoing = true;
-      if (!((String) pCleanMethodCombo.getSelectedItem()).equalsIgnoreCase("none")) {
-        pCleanConfigCombo.setSelectedItem(CommandArguments.PCleanConfig.TMT_LABELED/*getDisplayValue()*/);
+      if (!((String) cleanLabelingMethodCombo.getSelectedItem()).equalsIgnoreCase("none")) {
+        cleanConfigCombo.setSelectedItem(CommandArguments.CleanConfig.TMT_LABELED);
       }
     } finally {
       updateOnGoing = false;
     }
   }
 
-  private void updateConfigCombo(){
+  private void cleanConfigUpdated(){
     if(updateOnGoing)
       return;
 
     try {
       updateOnGoing = true;
-//      if (!((String) pCleanConfigCombo.getSelectedItem()).equalsIgnoreCase(CommandArguments.PCleanConfig.TMT_LABELED.getDisplayValue())) {
-      if(!pCleanConfigCombo.getSelectedItem().equals(CommandArguments.PCleanConfig.TMT_LABELED)){
-        pCleanMethodCombo.setEnabled(false);
-        pCleanMethodCombo.setSelectedIndex(0);
+      if(!cleanConfigCombo.getSelectedItem().equals(CommandArguments.CleanConfig.TMT_LABELED)){
+        cleanLabelingMethodCombo.setEnabled(false);
+        cleanLabelingMethodCombo.setSelectedIndex(0);
       } else {
-        pCleanMethodCombo.setEnabled(true);
+        cleanLabelingMethodCombo.setEnabled(true);
       }
     } finally {
       updateOnGoing = false;
     }
   }
 
-  private void updatePCleanOption(){
+  private void cleanMethodUpdated(){
     if(updateOnGoing){
       return;
     }
     try {
       updateOnGoing = true;
-      if (!pCleanCbx.isSelected()) {
-        pCleanMethodLabel.setEnabled(false);
-        pCleanConfigLabel.setEnabled(false);
-        pCleanMethodCombo.setEnabled(false);
-        pCleanConfigCombo.setEnabled(false);
+      if (cleanMethodCombo.getSelectedItem().toString().equalsIgnoreCase("none")) {
+        cleanLabelingMethodLabel.setEnabled(false);
+        cleanConfigLabel.setEnabled(false);
+        cleanLabelingMethodCombo.setEnabled(false);
+        cleanConfigCombo.setEnabled(false);
       } else {
-        pCleanMethodLabel.setEnabled(true);
-        pCleanConfigLabel.setEnabled(true);
-        pCleanConfigCombo.setEnabled(true);
-        if(!pCleanConfigCombo.getSelectedItem().equals(CommandArguments.PCleanConfig.TMT_LABELED))
-          pCleanMethodCombo.setEnabled(false);
+        cleanLabelingMethodLabel.setEnabled(true);
+        cleanConfigLabel.setEnabled(true);
+        cleanConfigCombo.setEnabled(true);
+        if(!cleanConfigCombo.getSelectedItem().equals(CommandArguments.CleanConfig.TMT_LABELED))
+          cleanLabelingMethodCombo.setEnabled(false);
         else
-          pCleanMethodCombo.setEnabled(true);
+          cleanLabelingMethodCombo.setEnabled(true);
 
       }
     }finally {
@@ -363,16 +383,19 @@ public class MzdbCreateMgfPanel extends JPanel {
     f.getContentPane().add(panel, BorderLayout.CENTER);
     f.pack();
 
-//    f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
       f.addWindowListener(new WindowAdapter(){
       public void windowClosing(WindowEvent e){
-        if(panel.buildCommand(new CommandArguments.MzDBCreateMgfCommand()))
+        CommandArguments.MzDBCreateMgfCommand command = new CommandArguments.MzDBCreateMgfCommand();
+        if(panel.buildCommand(command)) {
+          System.out.println("Command args : " + ToStringBuilder.reflectionToString(command));
           System.exit(0);
-        else
+        } else {
           panel.showErrorMessage();
+        }
       }
     });
     java.awt.EventQueue.invokeLater(() -> f.setVisible(true));
   }
+
 }

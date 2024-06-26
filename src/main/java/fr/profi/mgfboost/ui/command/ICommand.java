@@ -1,24 +1,28 @@
 package fr.profi.mgfboost.ui.command;
 
+import fr.profi.mgfboost.ui.command.ui.AbstractCommandPanel;
 import fr.profi.mgfboost.ui.model.MS2Collection;
 
-import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
-public interface ICommand {
+public interface ICommand<T> {
 
-  public void execute(File... files) throws Exception;
+  enum ExecutionMode { SINGLE_FILE, PAIRS_OF_FILES, BATCH_OF_SINGLE_FILES; }
 
-  public String getCommandName();
+  MS2Collection execute(File... files) throws Exception;
 
-  public JPanel getConfigurationPanel();
+  String getCommandName();
+
+  ExecutionMode getExecutionMode();
+
+  AbstractCommandPanel<T> getConfigurationPanel(List<MS2Collection> selectedFiles);
 
   boolean buildCommand();
 
   void showErrorMessage();
 
-  void setInputCollections(List<MS2Collection> selectedFiles);
+  String toJSON();
 
-  MS2Collection getOutputMS2Collection();
+  boolean fromJSON(String jsonString);
 }
