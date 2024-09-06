@@ -1,0 +1,68 @@
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 11 mai 2023 - 14:58:26 - Execute command MzDBCreateMgfCommand on OVEMB150205_12.mzdb
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 11 mai 2023 - 14:58:26 - Command args : fr.profi.mzknife.CommandArguments$MzDBCreateMgfCommand@3711e8fb[exportProlineTitle=true,help=false,intensityCutoff=0.0,msLevel=2,mzTolPPM=20.0,mzdbFile=C:\vero\DEV\Proline\data\SmallRun\OVEMB150205_12.mzdb,outputFile=C:\Temp\test1,pClean=true,pCleanConfig=Label Free,pCleanLabelMethodName=,precMzComputation=main_precursor_mz]
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 11 mai 2023 - 14:58:26 - Creating MGF File for mzDB file C:\vero\DEV\Proline\data\SmallRun\OVEMB150205_12.mzdb
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 11 mai 2023 - 14:58:26 - Precursor m/z values will be defined using the method: main_precursor_mz
+ERROR: f.p.m.ui.MS2CollectionManager [AWT-EventQueue-0] 11 mai 2023 - 14:58:26 - Error during command execution 
+java.util.concurrent.ExecutionException: com.almworks.sqlite4java.SQLiteException: [-91] cannot load library: java.lang.UnsatisfiedLinkError: no sqlite4java-win32-x64-1.0.392 in java.library.path: C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin\webstart\;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin\;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\jre\bin\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Common Files\Bruker Daltonik\DLLs\;C:\Program Files (x86)\Common Files\Bruker Daltonik\NTDS\Bin;C:\Program Files\Common Files\Bruker Daltonik\NTDS\Bin;C:\Program Files\Common Files\Bruker Daltonik\DLLs;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\Program Files\dotnet\;C:\Program Files\VisualSVN Server\bin;C:\Program Files\TortoiseGit\bin;C:\Program Files\SafeNet\Authentication\SAC\x64;C:\Program Files\SafeNet\Authentication\SAC\x32;C:\Program Files\PuTTY\;C:\Users\vd225637\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Common Files\Bruker Daltonik\DLLs;;.
+	at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
+	at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:191)
+	at java.desktop/javax.swing.SwingWorker.get(SwingWorker.java:613)
+	at fr.profi.mgfboost.ui.MS2CollectionManager$2.done(MS2CollectionManager.java:159)
+	at java.desktop/javax.swing.SwingWorker$5.run(SwingWorker.java:750)
+	at java.desktop/javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.run(SwingWorker.java:848)
+	at java.desktop/sun.swing.AccumulativeRunnable.run(AccumulativeRunnable.java:112)
+	at java.desktop/javax.swing.SwingWorker$DoSubmitAccumulativeRunnable.actionPerformed(SwingWorker.java:858)
+	at java.desktop/javax.swing.Timer.fireActionPerformed(Timer.java:311)
+	at java.desktop/javax.swing.Timer$DoPostEvent.run(Timer.java:243)
+	at java.desktop/java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:318)
+	at java.desktop/java.awt.EventQueue.dispatchEventImpl(EventQueue.java:771)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:722)
+	at java.desktop/java.awt.EventQueue$4.run(EventQueue.java:716)
+	at java.base/java.security.AccessController.doPrivileged(AccessController.java:399)
+	at java.base/java.security.ProtectionDomain$JavaSecurityAccessImpl.doIntersectionPrivilege(ProtectionDomain.java:86)
+	at java.desktop/java.awt.EventQueue.dispatchEvent(EventQueue.java:741)
+	at java.desktop/java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:203)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:124)
+	at java.desktop/java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:113)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:109)
+	at java.desktop/java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:101)
+	at java.desktop/java.awt.EventDispatchThread.run(EventDispatchThread.java:90)
+Caused by: com.almworks.sqlite4java.SQLiteException: [-91] cannot load library: java.lang.UnsatisfiedLinkError: no sqlite4java-win32-x64-1.0.392 in java.library.path: C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin\webstart\;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin\;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\jre\bin\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Common Files\Bruker Daltonik\DLLs\;C:\Program Files (x86)\Common Files\Bruker Daltonik\NTDS\Bin;C:\Program Files\Common Files\Bruker Daltonik\NTDS\Bin;C:\Program Files\Common Files\Bruker Daltonik\DLLs;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\Program Files\dotnet\;C:\Program Files\VisualSVN Server\bin;C:\Program Files\TortoiseGit\bin;C:\Program Files\SafeNet\Authentication\SAC\x64;C:\Program Files\SafeNet\Authentication\SAC\x32;C:\Program Files\PuTTY\;C:\Users\vd225637\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Common Files\Bruker Daltonik\DLLs;;.
+	at com.almworks.sqlite4java.SQLite.loadLibrary(SQLite.java:97)
+	at com.almworks.sqlite4java.SQLiteConnection.open0(SQLiteConnection.java:1441)
+	at com.almworks.sqlite4java.SQLiteConnection.openReadonly(SQLiteConnection.java:307)
+	at fr.profi.mzdb.MzDbReader.<init>(MzDbReader.java:93)
+	at fr.profi.mzdb.MzDbReader.<init>(MzDbReader.java:164)
+	at fr.profi.mzdb.io.writer.mgf.MgfWriter.initReader(MgfWriter.java:75)
+	at fr.profi.mzdb.io.writer.mgf.MgfWriter.<init>(MgfWriter.java:66)
+	at fr.profi.mzknife.MzDbProcessing.mzdbcreateMgf(MzDbProcessing.java:120)
+	at fr.profi.mgfboost.ui.command.MzdbCreateMgfCommand.execute(MzdbCreateMgfCommand.java:35)
+	at fr.profi.mgfboost.ui.MS2CollectionManager$2.doInBackground(MS2CollectionManager.java:150)
+	at fr.profi.mgfboost.ui.MS2CollectionManager$2.doInBackground(MS2CollectionManager.java:146)
+	at java.desktop/javax.swing.SwingWorker$1.call(SwingWorker.java:304)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.desktop/javax.swing.SwingWorker.run(SwingWorker.java:343)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: java.lang.UnsatisfiedLinkError: no sqlite4java-win32-x64-1.0.392 in java.library.path: C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin\webstart\;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\bin\;C:\Local\Programs\Dev\Java\jdk-17.0.3.1\jre\bin\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\Program Files\TortoiseSVN\bin;C:\Program Files (x86)\Common Files\Bruker Daltonik\DLLs\;C:\Program Files (x86)\Common Files\Bruker Daltonik\NTDS\Bin;C:\Program Files\Common Files\Bruker Daltonik\NTDS\Bin;C:\Program Files\Common Files\Bruker Daltonik\DLLs;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\Program Files\dotnet\;C:\Program Files\VisualSVN Server\bin;C:\Program Files\TortoiseGit\bin;C:\Program Files\SafeNet\Authentication\SAC\x64;C:\Program Files\SafeNet\Authentication\SAC\x32;C:\Program Files\PuTTY\;C:\Users\vd225637\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Common Files\Bruker Daltonik\DLLs;;.
+	at java.base/java.lang.ClassLoader.loadLibrary(ClassLoader.java:2429)
+	at java.base/java.lang.Runtime.loadLibrary0(Runtime.java:818)
+	at java.base/java.lang.System.loadLibrary(System.java:1989)
+	at com.almworks.sqlite4java.Internal.tryLoadFromSystemPath(Internal.java:352)
+	at com.almworks.sqlite4java.Internal.loadLibraryX(Internal.java:124)
+	at com.almworks.sqlite4java.SQLite.loadLibrary(SQLite.java:95)
+	... 16 common frames omitted
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 11 mai 2023 - 15:00:09 - Execute command MzDBCreateMgfCommand on OVEMB150205_12.mzdb
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 11 mai 2023 - 15:00:09 - Command args : fr.profi.mzknife.CommandArguments$MzDBCreateMgfCommand@2e83d9a6[exportProlineTitle=true,help=false,intensityCutoff=0.0,msLevel=2,mzTolPPM=20.0,mzdbFile=C:\vero\DEV\Proline\data\SmallRun\OVEMB150205_12.mzdb,outputFile=C:\Temp\teetet,pClean=true,pCleanConfig=Label Free,pCleanLabelMethodName=,precMzComputation=main_precursor_mz]
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 11 mai 2023 - 15:00:09 - Creating MGF File for mzDB file C:\vero\DEV\Proline\data\SmallRun\OVEMB150205_12.mzdb
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 11 mai 2023 - 15:00:09 - Precursor m/z values will be defined using the method: main_precursor_mz
+WARN : f.p.m.u.c.ui.MzdbCreateMgfPanel [AWT-EventQueue-0] 11 déc. 2023 - 11:26:48 - No output file specified ! 
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 11 déc. 2023 - 11:27:10 - Execute command MzDBCreateMgfCommand on s12a.mzDB
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 11 déc. 2023 - 11:27:10 - Command args : fr.profi.mzknife.CommandArguments$MzDBCreateMgfCommand@a117c68[dAnnot=false,exportProlineTitle=true,help=false,intensityCutoff=0.0,msLevel=2,mzTolPPM=10.0,mzdbFile=C:\Temp\Vero\mzdbWizard\VDS\s12a.mzDB,outputFile=C:\Temp\Vero\mzdbWizard\test.mgf,pClean=false,pCleanConfig=<null>,pCleanLabelMethodName=,precMzComputation=mgf_boost,swIntensityThreshold=0.2,swMaxPrecursorsCount=1,useHeader=true,useSelectionWindow=true]
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 11 déc. 2023 - 11:27:10 - Creating MGF File for mzDB file C:\Temp\Vero\mzdbWizard\VDS\s12a.mzDB
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 11 déc. 2023 - 11:27:10 - Precursor m/z values will be defined using the method: mgf_boost
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 19 janv. 2024 - 15:01:47 - Execute command MzDBCreateMgfCommand on Xpl1_004247.mzdb
+INFO : f.p.m.ui.command.CleanMgfCommand [SwingWorker-pool-2-thread-1] 19 janv. 2024 - 15:01:47 - Command args : fr.profi.mzknife.CommandArguments$MzDBCreateMgfCommand@20d3e86[dAnnot=false,exportProlineTitle=true,help=false,intensityCutoff=0.0,msLevel=2,mzTolPPM=20.0,mzdbFile=C:\Local\Programs\HomeTools\Zero\data\mzdb\Nasrallah1\Xpl1_004247.mzdb,outputFile=C:\Local\Programs\HomeTools\Zero\data\mzdb\Nasrallah1\Xpl1_004247.mgf,pClean=false,pCleanConfig=<null>,pCleanLabelMethodName=,precMzComputation=mgf_boost,swIntensityThreshold=0.2,swMaxPrecursorsCount=1,useHeader=true,useSelectionWindow=true]
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 19 janv. 2024 - 15:01:47 - Creating MGF File for mzDB file C:\Local\Programs\HomeTools\Zero\data\mzdb\Nasrallah1\Xpl1_004247.mzdb
+INFO : fr.profi.mzknife.MzDbProcessing [SwingWorker-pool-2-thread-1] 19 janv. 2024 - 15:01:47 - Precursor m/z values will be defined using the method: mgf_boost
