@@ -93,7 +93,7 @@ public class ECleanMgfPanel extends AbstractCommandPanel<CommandArguments.MgfCle
 
       final List<String> labelingMethods = Arrays.stream(MGFECleaner.IsobaricTag.values()).map(v -> v.name()).collect(Collectors.toList());
       labelingMethods.add(0, "None");
-      String[] labelingMethodValues =  labelingMethods.toArray(String[]::new); //{"None", "ITRAQ4PLEX", "ITRAQ8PLEX", "TMT6PLEX", "TMT10PLEX", "TMT11PLEX", "TMT16PLEX", "TMT18PLEX"};
+      String[] labelingMethodValues =  labelingMethods.toArray(String[]::new);
       labelMethodCombo = new JComboBox(labelingMethodValues);
       insidePanelGBC.gridx++;
       insidePanelGBC.weightx = 1.0;

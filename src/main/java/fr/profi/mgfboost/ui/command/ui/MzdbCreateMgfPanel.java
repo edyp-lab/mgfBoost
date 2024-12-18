@@ -5,6 +5,7 @@
 package fr.profi.mgfboost.ui.command.ui;
 
 import fr.profi.mzknife.CommandArguments;
+import fr.profi.mzknife.mgf.MGFECleaner;
 import fr.profi.mzknife.mzdb.MgfBoostConfigTemplate;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.slf4j.Logger;
@@ -105,11 +106,11 @@ public class MzdbCreateMgfPanel extends AbstractCommandPanel<CommandArguments.Mz
     }
     command.exportProlineTitle = prolineTitleCbx.isSelected();
 
-    String pCleanMethodName = (String) cleanLabelingMethodCombo.getSelectedItem();
+    String cleanLabelingMethodName = (String) cleanLabelingMethodCombo.getSelectedItem();
     command.cleanMethod = (String) cleanMethodCombo.getSelectedItem();
     if(!command.cleanMethod.equalsIgnoreCase("None")) {
       command.cleanConfig = (CommandArguments.CleanConfig) cleanConfigCombo.getSelectedItem();
-      command.cleanLabelMethodName = (pCleanMethodName.equalsIgnoreCase("none")) ? "" : pCleanMethodName.toUpperCase();
+      command.cleanLabelMethodName = (cleanLabelingMethodName.equalsIgnoreCase("none")) ? "" : cleanLabelingMethodName.toUpperCase();
       if(command.cleanConfig.equals(CommandArguments.CleanConfig.TMT_LABELED) && command.cleanLabelMethodName.isEmpty()){
         if(!buildCmdSuccess)
           buildCmdErrorMsg += "\n";
@@ -170,8 +171,11 @@ public class MzdbCreateMgfPanel extends AbstractCommandPanel<CommandArguments.Mz
     cleanMethodCombo.addActionListener(e -> cleanMethodUpdated());
 
     cleanLabelingMethodLabel = new JLabel();
-    String[] labelMethodValues = {"None", "ITRAQ4PLEX", "ITRAQ8PLEX", "TMT6PLEX", "TMT10PLEX", "TMT11PLEX", "TMT16PLEX", "TMT18PLEX"};
-    cleanLabelingMethodCombo = new JComboBox(labelMethodValues);
+
+    final List<String> labelingMethods = Arrays.stream(MGFECleaner.IsobaricTag.values()).map(v -> v.name()).collect(Collectors.toList());
+    labelingMethods.add(0, "None");
+    String[] labelingMethodValues =  labelingMethods.toArray(String[]::new);
+    cleanLabelingMethodCombo = new JComboBox(labelingMethodValues);
     cleanLabelingMethodCombo.setSelectedIndex(0);
     cleanLabelingMethodCombo.addActionListener(e ->  cleanLabelingMethodUpdated() );
 
