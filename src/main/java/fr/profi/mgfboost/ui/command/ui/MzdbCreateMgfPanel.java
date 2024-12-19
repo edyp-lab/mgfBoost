@@ -4,6 +4,7 @@
 
 package fr.profi.mgfboost.ui.command.ui;
 
+import Preprocessing.JSpectrum;
 import fr.profi.mzknife.CommandArguments;
 import fr.profi.mzknife.mgf.MGFECleaner;
 import fr.profi.mzknife.mzdb.MgfBoostConfigTemplate;
@@ -111,11 +112,23 @@ public class MzdbCreateMgfPanel extends AbstractCommandPanel<CommandArguments.Mz
     if(!command.cleanMethod.equalsIgnoreCase("None")) {
       command.cleanConfig = (CommandArguments.CleanConfig) cleanConfigCombo.getSelectedItem();
       command.cleanLabelMethodName = (cleanLabelingMethodName.equalsIgnoreCase("none")) ? "" : cleanLabelingMethodName.toUpperCase();
-      if(command.cleanConfig.equals(CommandArguments.CleanConfig.TMT_LABELED) && command.cleanLabelMethodName.isEmpty()){
-        if(!buildCmdSuccess)
-          buildCmdErrorMsg += "\n";
-        buildCmdErrorMsg+="clean labeling method should be specified for "+ CommandArguments.CleanConfig.TMT_LABELED.getDisplayValue();
-        buildCmdSuccess = false;
+      if(command.cleanConfig.equals(CommandArguments.CleanConfig.TMT_LABELED)) {
+        if (command.cleanLabelMethodName.isEmpty()) {
+          if (!buildCmdSuccess)
+            buildCmdErrorMsg += "\n";
+          buildCmdErrorMsg += "clean labeling method should be specified for " + CommandArguments.CleanConfig.TMT_LABELED.getDisplayValue();
+          buildCmdSuccess = false;
+        } else if (command.cleanMethod.equalsIgnoreCase("pClean")) { //"eClean", "pClean"
+          try {
+            JSpectrum.IsobaricTag.valueOf(command.cleanLabelMethodName);
+          } catch (IllegalArgumentException iae) {
+            //Do not exist in pClean ...
+            if (!buildCmdSuccess)
+              buildCmdErrorMsg += "\n";
+            buildCmdErrorMsg += "Invalid labeling method specified for " + command.cleanMethod + ":  " + command.cleanLabelMethodName;
+            buildCmdSuccess = false;
+          }
+        }
       }
     }
     if(!buildCmdSuccess)
