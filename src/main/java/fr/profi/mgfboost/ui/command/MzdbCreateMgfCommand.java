@@ -49,6 +49,13 @@ public class MzdbCreateMgfCommand extends AbstractCommand<CommandArguments.MzDBC
   }
 
   @Override
+  public void showErrorMessage() {
+    if (configurationPanel != null)  {
+      configurationPanel.showErrorMessage();
+    }
+  }
+
+  @Override
   public ExecutionMode getExecutionMode() {
     return ExecutionMode.BATCH_OF_SINGLE_FILES;
   }
