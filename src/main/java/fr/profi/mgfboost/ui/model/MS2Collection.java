@@ -119,10 +119,10 @@ public class MS2Collection {
 
   public List<MSMSSpectrum> getSpectrumList() {
     if (getFileType() == MainPanel.FileType.MGF) {
-      MGFReader reader = new MGFReader();
       try {
-        return reader.read(getFile());
-      } catch (InvalidMGFFormatException e) {
+        MGFReader reader = new MGFReader(getFile());
+        return reader.readAllSpectrum();
+      } catch (InvalidMGFFormatException|IOException e) {
         logger.error("Unable to read MGF file " + getFile().getAbsolutePath(), e);
       }
     } else if (getFileType() == MainPanel.FileType.MZDB) {
