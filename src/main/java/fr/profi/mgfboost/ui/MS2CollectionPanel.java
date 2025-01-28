@@ -1,6 +1,6 @@
 package fr.profi.mgfboost.ui;
 
-import fr.profi.mzscope.MSMSSpectrum;
+import fr.profi.ms.model.MSMSSpectrum;
 import fr.profi.mzscope.ui.MGFPanel;
 import fr.proline.mzscope.model.Spectrum;
 import fr.proline.mzscope.ui.IMzScopeController;

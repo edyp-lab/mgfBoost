@@ -1,14 +1,14 @@
 package fr.profi.mgfboost.ui.model;
 
 import com.almworks.sqlite4java.SQLiteException;
+import fr.profi.mgf.InvalidMGFFormatException;
+import fr.profi.mgf.MGFConstants;
+import fr.profi.mgf.MGFReader;
 import fr.profi.mgfboost.ui.MainPanel;
+import fr.profi.ms.model.MSMSSpectrum;
 import fr.profi.mzdb.MzDbReader;
 import fr.profi.mzdb.model.SpectrumData;
 import fr.profi.mzdb.model.SpectrumHeader;
-import fr.profi.mzscope.InvalidMGFFormatException;
-import fr.profi.mzscope.MGFConstants;
-import fr.profi.mzscope.MGFReader;
-import fr.profi.mzscope.MSMSSpectrum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

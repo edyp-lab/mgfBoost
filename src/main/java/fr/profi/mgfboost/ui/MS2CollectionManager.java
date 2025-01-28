@@ -2,8 +2,8 @@ package fr.profi.mgfboost.ui;
 
 import fr.profi.mgfboost.ui.command.*;
 import fr.profi.mgfboost.ui.model.MS2Collection;
+import fr.profi.ms.model.MSMSSpectrum;
 import fr.profi.mzknife.CommandArguments;
-import fr.profi.mzscope.MSMSSpectrum;
 import fr.proline.studio.ImageUtilities;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
