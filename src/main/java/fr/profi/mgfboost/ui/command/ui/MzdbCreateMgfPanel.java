@@ -85,10 +85,8 @@ public class MzdbCreateMgfPanel extends AbstractCommandPanel<CommandArguments.Mz
       try {
         command.useHeader = mgfBoostConfigTemplate.isUseHeader();
         command.useSelectionWindow = mgfBoostConfigTemplate.isUseSelectionWindow();
-        command.swMaxPrecursorsCount = mgfBoostConfigTemplate.getSwMaxPrecursorsCount();
-        command.swIntensityThreshold = mgfBoostConfigTemplate.getSwIntensityThreshold();
         command.pifThreshold = mgfBoostConfigTemplate.getPifThreshold();
-        command.rankThreshold = mgfBoostConfigTemplate.getRankThreshold();
+        command.takeThreshold = mgfBoostConfigTemplate.getTakeThreshold();
         command.scanSelectorMode = CommandArguments.ScanSelectorMode.valueOf(mgfBoostConfigTemplate.getScanSelector().toString());
       } catch (IllegalArgumentException iae) {
         buildCmdSuccess = false;
