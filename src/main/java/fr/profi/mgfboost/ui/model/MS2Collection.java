@@ -1,14 +1,14 @@
 package fr.profi.mgfboost.ui.model;
 
 import com.almworks.sqlite4java.SQLiteException;
+import fr.profi.mgf.InvalidMGFFormatException;
+import fr.profi.mgf.MGFConstants;
+import fr.profi.mgf.MGFReader;
 import fr.profi.mgfboost.ui.MainPanel;
+import fr.profi.ms.model.MSMSSpectrum;
 import fr.profi.mzdb.MzDbReader;
 import fr.profi.mzdb.model.SpectrumData;
 import fr.profi.mzdb.model.SpectrumHeader;
-import fr.profi.mzscope.InvalidMGFFormatException;
-import fr.profi.mzscope.MGFConstants;
-import fr.profi.mzscope.MGFReader;
-import fr.profi.mzscope.MSMSSpectrum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,10 +119,10 @@ public class MS2Collection {
 
   public List<MSMSSpectrum> getSpectrumList() {
     if (getFileType() == MainPanel.FileType.MGF) {
-      MGFReader reader = new MGFReader();
       try {
-        return reader.read(getFile());
-      } catch (InvalidMGFFormatException e) {
+        MGFReader reader = new MGFReader(getFile());
+        return reader.readAllSpectrum();
+      } catch (InvalidMGFFormatException|IOException e) {
         logger.error("Unable to read MGF file " + getFile().getAbsolutePath(), e);
       }
     } else if (getFileType() == MainPanel.FileType.MZDB) {
